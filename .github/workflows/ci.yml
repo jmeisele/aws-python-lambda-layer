@@ -99,9 +99,9 @@ jobs:
         run: terraform init
       
       - name: Download layer.zip
-          uses: actions/download-artifact@v3
-          with:
-            name: layer
+        uses: actions/download-artifact@v3
+        with:
+          name: layer
 
       - name: Terraform validate
         id: validate
