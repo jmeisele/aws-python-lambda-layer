@@ -1,7 +1,7 @@
 import logging
 from typing import Dict
 
-from aws_xray_sdk.core import xray_recorder, patch_all
+from aws_xray_sdk.core import patch_all, xray_recorder
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
