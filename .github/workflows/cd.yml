@@ -6,7 +6,31 @@ on:
       - main
 
 jobs:
+  create-lambda-layer-zip:
+    name: Create lambda layer zip
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Set up Python 3.8.1
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8.1
+      
+      - name: Install aws-xray-sdk
+        run: |
+          pip3 install aws-xray-sdk -t ./python
+      
+      - name: Zip aws-xray-sdk
+        run: |
+          zip -r layer.zip ./python
+
   deploy-infra:
+    needs: create-lambda-layer-zip
     name: Deploy Infrastructure w/ Terraform
     runs-on: ubuntu-20.04
     permissions:

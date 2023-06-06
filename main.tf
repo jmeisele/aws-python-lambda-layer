@@ -1,7 +1,6 @@
 #   ###############
 #   #   Lambda    #
 #   ###############
-
 resource "aws_iam_role" "iam_for_lambda" {
   name               = "iam_for_lambda"
   assume_role_policy = <<EOF
@@ -84,9 +83,15 @@ resource "aws_lambda_function" "lambda" {
   runtime          = "python3.8"
   handler          = "handler.lambda_handler"
   timeout          = 10
-  # layers = []
+  layers = [aws_lambda_layer_version.xray.arn]
 }
 
-#   ###############
-#   #   Layer   #
-#   ###############
+###############
+#   Layer   #
+###############
+resource "aws_lambda_layer_version" "xray" {
+  filename            = "${module.path}/python/layer.zip"
+  description         = "aws-xray-sdk module"
+  layer_name          = "aws-xray-sdk"
+  compatible_runtimes = ["python3.8"]
+}
