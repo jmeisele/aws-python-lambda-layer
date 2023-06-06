@@ -31,57 +31,38 @@ jobs:
         run: |
           make test.coverage
 
-  # build-push-docker-images:
-  #   needs: lint-test
-  #   name: Build and Push Image to ECR
-  #   runs-on: ubuntu-20.04
-  #   permissions:
-  #     contents: read
-  #     id-token: write
-  #     packages: read
-  #     pull-requests: write
+  create-lambda-layer-zip:
+    name: Create lambda layer zip
+    needs: lint-test
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: write
 
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Set up Python 3.8.1
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8.1
+      
+      - name: Install aws-xray-sdk
+        run: |
+          pip3 install aws-xray-sdk -t ./python
+      
+      - name: Zip aws-xray-sdk
+        run: |
+          zip -r layer.zip ./python
 
-  #     - name: Configure AWS Credentials
-  #       uses: aws-actions/configure-aws-credentials@v1
-  #       with:
-  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #         aws-region: us-east-1
-
-  #     - name: Install docker
-  #       id: install-docker
-  #       run: curl -fsSL https://get.docker.com -o get-docker.sh && chmod +x get-docker.sh && ./get-docker.sh
-
-  #     - name: Login to Amazon ECR
-  #       id: login-ecr
-  #       uses: aws-actions/amazon-ecr-login@v1
-
-  #     - name: Build, tag, and push handler.py to Amazon ECR
-  #       env:
-  #         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-  #         REPOSITORY: davinci_ecr
-  #         DOCKERFILE: Dockerfile.handler
-  #         IMAGE_TAG: lambda_handler
-  #       run: |
-  #         docker build --no-cache -f $DOCKERFILE -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-  #         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
-
-  #     - name: Build, tag, and push authorizer.py to Amazon ECR
-  #       env:
-  #         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-  #         REPOSITORY: davinci_ecr
-  #         DOCKERFILE: Dockerfile.authorizer
-  #         IMAGE_TAG: lambda_authorizer
-  #       run: |
-  #         docker build --no-cache -f $DOCKERFILE -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-  #         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+      - name: Upload layer.zip artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: layer
+          path: ./layer.zip
 
   plan-infra:
-    # needs: build-push-docker-images
+    needs: create-lambda-layer-zip
     name: Plan Infrastructure w/ Terraform
     runs-on: ubuntu-20.04
     permissions:
@@ -116,6 +97,11 @@ jobs:
         env:
           TF_TOKEN: ${{ secrets.TF_API_TOKEN }}
         run: terraform init
+      
+      - name: Download layer.zip from previous job
+        uses: actions/download-artifact@v3
+        with:
+          name: layer
 
       - name: Terraform validate
         id: validate
