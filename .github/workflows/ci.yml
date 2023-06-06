@@ -55,6 +55,12 @@ jobs:
         run: |
           zip -r layer.zip ./python
 
+      - name: Upload layer.zip artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: layer
+          path: ./python/layer.zip
+
   plan-infra:
     needs: create-lambda-layer-zip
     name: Plan Infrastructure w/ Terraform
@@ -91,6 +97,11 @@ jobs:
         env:
           TF_TOKEN: ${{ secrets.TF_API_TOKEN }}
         run: terraform init
+      
+      - name: Download layer.zip
+          uses: actions/download-artifact@v3
+          with:
+            name: layer
 
       - name: Terraform validate
         id: validate
