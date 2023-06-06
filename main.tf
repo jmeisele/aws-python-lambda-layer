@@ -90,7 +90,7 @@ resource "aws_lambda_function" "lambda" {
 #   Layer   #
 ###############
 resource "aws_lambda_layer_version" "xray" {
-  filename            = "${module.path}/python/layer.zip"
+  filename            = "${module.path}/layer.zip"
   description         = "aws-xray-sdk module"
   layer_name          = "aws-xray-sdk"
   compatible_runtimes = ["python3.8"]

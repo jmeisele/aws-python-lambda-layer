@@ -28,13 +28,12 @@ jobs:
       - name: Zip aws-xray-sdk
         run: |
           zip -r layer.zip ./python
-          sleep 5
       
       - name: Upload layer.zip artifact
         uses: actions/upload-artifact@v3
         with:
           name: layer
-          path: ./python/layer.zip
+          path: ./layer.zip
 
   deploy-infra:
     needs: create-lambda-layer-zip
