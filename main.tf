@@ -23,12 +23,21 @@ EOF
 data "aws_iam_policy_document" "lambda_logs" {
   statement {
     actions = [
-      "logs: CreateLogGroup",
+      "logs:CreateLogGroup",
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
     resources = [
       "arn:aws:logs:*:*:*"
+    ]
+  }
+  statement {
+    actions = [
+      "xray:PutTraceSegments",
+      "xray:PutTelemetryRecords",
+    ]
+    resources = [
+      "arn:aws:xray:*:*:*"
     ]
   }
 }
@@ -84,6 +93,9 @@ resource "aws_lambda_function" "lambda" {
   handler          = "handler.lambda_handler"
   timeout          = 10
   layers           = [aws_lambda_layer_version.xray.arn]
+  tracing_config {
+    mode = "Active"
+  }
 }
 
 ###############
