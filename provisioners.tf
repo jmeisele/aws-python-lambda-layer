@@ -21,4 +21,10 @@ provider "aws" {
   secret_key              = var.secret_key
   region                  = var.region
   skip_metadata_api_check = true
+  default_tags {
+    tags = {
+      GitHubRepo = "aws-python-lambda-layer"
+      Workspace  = "aws-python-lambda-layer"
+    }
+  }
 }
