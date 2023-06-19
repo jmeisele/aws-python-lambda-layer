@@ -1,6 +1,6 @@
-#   ###############
-#   #   Lambda    #
-#   ###############
+###############
+#     IAM     #
+###############
 # resource "aws_iam_role" "iam_for_lambda" {
 #   name               = "iam_for_lambda"
 #   assume_role_policy = <<EOF
@@ -56,6 +56,10 @@
 #   policy_arn = aws_iam_policy.iam_policy_for_lambda.arn
 # }
 
+
+###############
+#   Lambda    #
+###############
 # data "archive_file" "python_lambda_package" {
 #   type        = "zip"
 #   source_file = "${path.module}/src/handler.py"
@@ -77,6 +81,7 @@
 #   }
 # }
 
+
 ###############
 #   Layer     #
 ###############
@@ -86,3 +91,11 @@
 #   layer_name          = "aws-xray-sdk"
 #   compatible_runtimes = ["python3.8"]
 # }
+
+##########################
+#   Cloudwatch Logs     #
+##########################
+
+##########################
+#   Cloudwatch Alarm     #
+##########################
