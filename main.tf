@@ -20,7 +20,7 @@ resource "aws_iam_role" "iam_for_lambda" {
 EOF
 }
 
-# NOTE: We are deleteing the logs:CreateLogGroup since we are creating a log group resource
+# NOTE: We are deleteing the logs:CreateLogGroup action since we are creating a log group resource in terraform
 data "aws_iam_policy_document" "lambda_logs" {
   statement {
     actions = [
