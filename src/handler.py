@@ -9,5 +9,5 @@ patch_all()
 
 
 def lambda_handler(event: Dict, context: Dict) -> str:
-    logger.info(event)
+    logger.info(f"Event: {event}:")
     return "Hello from Lambda!"
