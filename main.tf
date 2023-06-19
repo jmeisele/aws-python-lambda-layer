@@ -77,7 +77,7 @@ resource "aws_lambda_function" "lambda" {
   timeout          = 10
   layers           = [aws_lambda_layer_version.xray.arn]
   depends_on = [
-    aws_cloudwatch_log_group.aws_cloudwatch_log_group.lambda_logs
+    aws_cloudwatch_log_group.lambda_logs
   ]
   tracing_config {
     mode = "Active"
