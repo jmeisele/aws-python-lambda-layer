@@ -98,6 +98,7 @@ resource "aws_lambda_layer_version" "xray" {
 ##########################
 #   Cloudwatch Logs     #
 ##########################
+# NOTE: The cloudwatch log group HAS to follow this naming convention for lambda logging
 resource "aws_cloudwatch_log_group" "lambda_logs" {
   name = "/aws/lambda/${var.function_name}"
 }
