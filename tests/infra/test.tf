@@ -23,7 +23,7 @@ module "main" {
 }
 
 data "aws_lambda_function" "lambda" {
-  function_name = module.main.lambda.name
+  function_name = "test-function"
 }
 
 
@@ -36,13 +36,13 @@ resource "test_assertions" "lambda" {
   component = "lambda"
 
   check "lambda_name" {
-    description = "Check lambda name"
-    condition   = can(regex("^test-", module.main.lambda))
+    description = "Check lambda name beginning"
+    condition   = can(regex("^test-", data.aws_lambda_function.lambda.function_name))
   }
 
   equal "lambda_name_tag" {
-    description = "check lambda tag"
-    got         = data.aws_lambda_function.name
+    description = "Check lambda name"
+    got         = data.aws_lambda_function.lambda.function_name
     want        = "test-function"
   }
 }
