@@ -88,7 +88,7 @@ jobs:
       - name: Test Infra
         run: |
           # Copy provider override into place 
-          cp tests/aws_provider_localstack.tf provider.tf
+          cp tests/aws_provider_localstack.tf providers.tf
           terraform test
 
   plan-infra:
