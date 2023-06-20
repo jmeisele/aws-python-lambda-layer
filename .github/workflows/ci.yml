@@ -86,7 +86,9 @@ jobs:
         # run: terraform test
       
       - name: Apply our Terraform Config to Localstack
-        run: terraform apply -auto-approve -input=false
+        run: |
+        terraform init
+        terraform apply -auto-approve -input=false
 
       - name: Invoke Lambda
         run: |
