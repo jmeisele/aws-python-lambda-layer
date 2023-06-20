@@ -65,20 +65,13 @@ jobs:
     needs: create-lambda-layer-zip
     name: Test Infrastructure w/ Localstack
     runs-on: ubuntu-20.04
-    # Service containers to run with 'test-infra'
-    # services:
-      # Label used to access the service container
-      # localstack:
-      #   image: localstack/localstack:2.1.0
-      #   ports:
-      #    - 4566:4566
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
       
       - name: Start Localstack
         run: |
-          pip install localstack                    # install LocalStack cli and awslocal
+          pip install localstack awscli-local[ver1] # install LocalStack cli and awslocal
           docker pull localstack/localstack         # Make sure to pull the latest version of the image
           localstack start -d                       # Start LocalStack in the background
           
@@ -87,13 +80,31 @@ jobs:
           echo "Startup complete"   
 
       - name: Override AWS Provider
-        run: cp tests/infra/test_provider.tf providers.tf
+        run: cp tests/test_provider.tf providers.tf
       
-      - name: Test Terraform
-        run: terraform test
+      - name: Initialize Terraform against our localstack
+        run: terraform init
+
+      - name: Download layer.zip from previous job
+        uses: actions/download-artifact@v3
+        with:
+          name: layer
+
+      - name: Apply Terraform to Localstack
+        run: terraform apply -auto-approve -input=false -var access_key=test -var secret_key=test
+
+      - name: Invoke Lambda
+        run: |
+          awslocal lambda list-functions
+          awslocal lambda invoke --function-name lambda --payload '{ "foo": "bar" }' response.json
+          # grep "Hello from lambda" response.json
+          cat response.json
+      
+      - name: Destroy Terraform Resources in Localstack
+        run: terraform destroy -var access_key=test -var secret_key=test -auto-approve
 
   plan-infra:
-    needs: [create-lambda-layer-zip, test-infra]
+    needs: [test-infra]
     name: Plan Infrastructure w/ Terraform
     runs-on: ubuntu-20.04
     permissions:
