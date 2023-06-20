@@ -107,3 +107,36 @@ resource "aws_cloudwatch_log_group" "lambda_logs" {
 ##########################
 #   Cloudwatch Alarm     #
 ##########################
+# resource "aws_cloudwatch_metric_alarm" "lambda_alarm" {
+#   alarm_name          = "${var.function_name}-lambda-execution-time"
+#   comparison_operator = "GreaterThanOrEqualToThreshold"
+#   evaluation_periods  = "1"
+#   metric_name         = "Duration"
+#   namespace           = "AWS/Lambda"
+#   period              = "60"
+#   statistic           = "Maximum"
+#   threshold           = aws_lambda_function.lambda.timeout * 1000 * 0.75
+#   alarm_description   = "Lambda Execution Time"
+#   treat_missing_data  = "ignore"
+
+#   insufficient_data_actions = [
+#     "${aws_sns_topic.alarms.arn}",
+#   ]
+
+#   alarm_actions = [
+#     "${aws_sns_topic.alarms.arn}",
+#   ]
+
+#   ok_actions = [
+#     "${aws_sns_topic.alarms.arn}",
+#   ]
+
+#   dimensions {
+#     FunctionName = aws_lambda_function.lambda.function_name
+#     Resource     = aws_lambda_function.lambda.function_name
+#   }
+# }
+
+##########################
+#       SNS Topic        #
+##########################

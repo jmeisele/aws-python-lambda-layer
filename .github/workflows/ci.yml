@@ -60,9 +60,40 @@ jobs:
         with:
           name: layer
           path: ./layer.zip
+  
+  test-infra:
+    needs: create-lambda-layer-zip
+    name: Test Infrastructure w/ Localstack
+    runs-on: ubuntu-20.04
+    # Service containers to run with 'test-infra'
+    # services:
+      # Label used to access the service container
+      # localstack:
+      #   image: localstack/localstack:2.1.0
+      #   ports:
+      #    - 4566:4566
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Start Localstack
+        run: |
+          pip install localstack                    # install LocalStack cli and awslocal
+          docker pull localstack/localstack         # Make sure to pull the latest version of the image
+          localstack start -d                       # Start LocalStack in the background
+          
+          echo "Waiting for LocalStack startup..."  # Wait 30 seconds for the LocalStack container
+          localstack wait -t 30                     # to become ready before timing out 
+          echo "Startup complete"   
+
+      - name: Override AWS Provider
+        run: cp tests/infra/test_provider.tf providers.tf
+      
+      - name: Test Terraform
+        run: terraform test
 
   plan-infra:
-    needs: create-lambda-layer-zip
+    needs: [create-lambda-layer-zip, test-infra]
     name: Plan Infrastructure w/ Terraform
     runs-on: ubuntu-20.04
     permissions:
