@@ -18,6 +18,8 @@ module "main" {
   # main module directory
   source        = "../.."
   function_name = "test-function"
+  access_key    = "test"
+  secret_key    = "test"
 }
 
 data "aws_lambda_function" "lambda" {
