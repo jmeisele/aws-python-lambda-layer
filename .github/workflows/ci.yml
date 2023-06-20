@@ -82,13 +82,19 @@ jobs:
       - name: Override AWS Provider
         run: cp tests/infra/test_provider.tf providers.tf
       
-      - name: Test Terraform
-        run: terraform test
+      # - name: Test Terraform Resources
+        # run: terraform test
       
+      - name: Apply our Terraform Config to Localstack
+        run: terraform apply -auto-approve -input=false
+
       - name: Invoke Lambda
         run: |
           awslocal lambda list-functions
           awslocal lambda invoke --function-name test-function
+      
+      - name: Destroy Terraform Resources in Localstack
+        run: terraform destroy
 
   plan-infra:
     needs: [create-lambda-layer-zip, test-infra]
