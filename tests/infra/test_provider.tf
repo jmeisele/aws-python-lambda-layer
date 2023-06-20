@@ -10,8 +10,8 @@ terraform {
 
 provider "aws" {
 
-  access_key = "test"
-  secret_key = "test"
+  access_key = var.access_key
+  secret_key = var.secret_key
   region     = "us-east-1"
 
   s3_use_path_style           = false
