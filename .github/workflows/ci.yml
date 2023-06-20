@@ -97,7 +97,7 @@ jobs:
         run: |
           awslocal lambda list-functions
           awslocal lambda invoke --function-name lambda --payload '{ "foo": "bar" }' response.json
-          # grep "Hello from Lambda!" response.json
+          grep "Hello from Lambda" response.json
       
       - name: Destroy Terraform Resources in Localstack
         run: terraform destroy -var access_key=test -var secret_key=test -auto-approve
