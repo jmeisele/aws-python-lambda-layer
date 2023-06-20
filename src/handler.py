@@ -1,6 +1,6 @@
-import logging
 import json
-from typing import Dict, Any
+import logging
+from typing import Any, Dict
 
 from aws_xray_sdk.core import patch_all, xray_recorder
 
