@@ -103,7 +103,7 @@ jobs:
           # grep "Hello from Lambda!" response.json
       
       - name: Destroy Terraform Resources in Localstack
-        run: terraform destroy -var access_key=test -var secret_key=test
+        run: terraform destroy -var access_key=test -var secret_key=test -auto-approve
 
   plan-infra:
     needs: [create-lambda-layer-zip, test-infra]
