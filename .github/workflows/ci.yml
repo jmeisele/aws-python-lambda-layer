@@ -63,7 +63,7 @@ jobs:
   
   test-infra:
     needs: create-lambda-layer-zip
-    name: Test Infrastrcuture w/ Localstack
+    name: Test Infrastructure w/ Localstack
     runs-on: ubuntu-20.04
     # Service containers to run with 'test-infra'
     # services:
