@@ -99,10 +99,11 @@ jobs:
       - name: Invoke Lambda
         run: |
           awslocal lambda list-functions
-          # awslocal lambda invoke --function-name test-function
+          awslocal lambda invoke --function-name test-function --payload "{"""foo"":""bar""}" response.json
+          grep "Hello from Lambda!" response.json
       
       - name: Destroy Terraform Resources in Localstack
-        run: terraform destroy
+        run: terraform destroy -var access_key=test -var secret_key=test
 
   plan-infra:
     needs: [create-lambda-layer-zip, test-infra]
