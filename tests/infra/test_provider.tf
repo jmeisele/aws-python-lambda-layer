@@ -1,12 +1,5 @@
 terraform {
   required_version = "~> 1.0"
-  # cloud {
-  #   hostname     = "app.terraform.io"
-  #   organization = "davinci"
-  #   workspaces {
-  #     name = "aws-python-lambda-layer"
-  #   }
-  # }
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -16,7 +9,7 @@ terraform {
 }
 
 provider "aws" {
-  
+
   access_key = "test"
   secret_key = "test"
   region     = "us-east-1"
