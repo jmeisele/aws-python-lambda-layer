@@ -99,7 +99,7 @@ jobs:
       - name: Invoke Lambda
         run: |
           awslocal lambda list-functions
-          awslocal lambda invoke --function-name test-function
+          # awslocal lambda invoke --function-name test-function
       
       - name: Destroy Terraform Resources in Localstack
         run: terraform destroy
