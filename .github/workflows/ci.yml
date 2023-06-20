@@ -87,7 +87,7 @@ jobs:
       
       - name: Invoke Lambda
         run: |
-          awslocal lambda ls
+          awslocal lambda list-functions
           awslocal lambda invoke --function-name test-function
 
   plan-infra:
