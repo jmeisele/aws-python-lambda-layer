@@ -61,6 +61,7 @@ module "main" {
 
 data "aws_lambda_function" "lambda" {
   function_name = "test-function"
+  depends_on    = [module.main]
 }
 
 
