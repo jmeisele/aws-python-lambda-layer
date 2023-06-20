@@ -70,6 +70,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: layer
+          path: ./layer.zip
       
       - name: Checkout repository
         uses: actions/checkout@v3
