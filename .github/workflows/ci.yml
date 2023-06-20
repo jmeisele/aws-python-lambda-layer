@@ -65,20 +65,13 @@ jobs:
     needs: create-lambda-layer-zip
     name: Test Infrastructure w/ Localstack
     runs-on: ubuntu-20.04
-    # Service containers to run with 'test-infra'
-    # services:
-      # Label used to access the service container
-      # localstack:
-      #   image: localstack/localstack:2.1.0
-      #   ports:
-      #    - 4566:4566
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
       
       - name: Start Localstack
         run: |
-          pip install localstack                    # install LocalStack cli and awslocal
+          pip install localstack awscli-local[ver1] # install LocalStack cli and awslocal
           docker pull localstack/localstack         # Make sure to pull the latest version of the image
           localstack start -d                       # Start LocalStack in the background
           
@@ -91,6 +84,11 @@ jobs:
       
       - name: Test Terraform
         run: terraform test
+      
+      - name: Invoke Lambda
+        run: |
+          awslocal lambda ls
+          awslocal lambda invoke --function-name test-function
 
   plan-infra:
     needs: [create-lambda-layer-zip, test-infra]
