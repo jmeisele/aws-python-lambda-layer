@@ -86,8 +86,8 @@ jobs:
           localstack wait -t 30                     # to become ready before timing out 
           echo "Startup complete"   
 
-      - name: Override AWS Provider
-        run: cp tests/aws_provider_localstack.tf providers.tf
+      # - name: Override AWS Provider
+      #   run: cp tests/aws_provider_localstack.tf providers.tf
       
       - name: Test Terraform
         run: terraform test
