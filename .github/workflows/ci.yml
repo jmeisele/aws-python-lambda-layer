@@ -68,7 +68,7 @@ jobs:
     # Service containers to run with 'test-infra'
     # services:
     #   localstack:
-    #     image: localstack/localstack:0.14.3
+    #     image: localstack/localstack:2.1.0
     #     ports:
     #      - 4566:4566
     steps:
@@ -87,7 +87,8 @@ jobs:
 
       - name: Test Infra
         run: |
-          cp tests/aws_provider_localstack.tf tests/infra/test_provider.tf
+          # Copy provider override into place 
+          cp tests/aws_provider_localstack.tf provider.tf
           terraform test
 
   plan-infra:
