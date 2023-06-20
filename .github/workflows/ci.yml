@@ -66,12 +66,6 @@ jobs:
     name: Test Infrastructure w/ Localstack
     runs-on: ubuntu-20.04
     steps:
-      - name: Download layer.zip from previous job
-        uses: actions/download-artifact@v3
-        with:
-          name: layer
-          path: ./layer.zip
-      
       - name: Checkout repository
         uses: actions/checkout@v3
       
@@ -91,10 +85,16 @@ jobs:
       # - name: Test Terraform Resources
         # run: terraform test
       
-      - name: Apply our Terraform Config to Localstack
-        run: |
-          terraform init
-          terraform apply -auto-approve -input=false -var access_key=test -var secret_key=test
+      - name: Initialize Terraform against our localstack
+        run: terraform init
+
+      - name: Download layer.zip from previous job
+        uses: actions/download-artifact@v3
+        with:
+          name: layer
+
+      - name: Apply Terraform to Localstack
+        run: terraform apply -auto-approve -input=false -var access_key=test -var secret_key=test
 
       - name: Invoke Lambda
         run: |
