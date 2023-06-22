@@ -130,9 +130,8 @@ resource "aws_cloudwatch_metric_alarm" "lambda_alarm" {
     "${aws_sns_topic.alarms.arn}",
   ]
 
-  dimensions {
+  dimensions = {
     FunctionName = aws_lambda_function.lambda.function_name
-    Resource     = aws_lambda_function.lambda.function_name
   }
 }
 
@@ -144,7 +143,7 @@ resource "aws_sns_topic" "alarms" {
 }
 
 resource "aws_sns_topic_subscription" "subscription" {
-  topic_arn = data.aws_sns_topic.alarms.arn
+  topic_arn = aws_sns_topic.alarms.arn
   protocol  = "email"
   endpoint  = "jmeisele@yahoo.com"
 }
