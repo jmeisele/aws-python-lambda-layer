@@ -8,9 +8,7 @@
 		"ghcr.io/devcontainers/features/github-cli:1": {},
 		"ghcr.io/devcontainers/features/terraform:1": {},
 		"ghcr.io/devcontainers-contrib/features/poetry:2": {},
-		"ghcr.io/devcontainers-contrib/features/pre-commit:2": {},
-		"ghcr.io/devcontainers/features/rust:1": {},
-		"ghcr.io/meaningful-ooo/devcontainer-features/homebrew:2": {}
+		"ghcr.io/devcontainers-contrib/features/pre-commit:2": {}
 	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
@@ -20,7 +18,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pre-commit install && brew tap cargo-lambda/cargo-lambda && brew install cargo-lambda"
+	"postCreateCommand": "pre-commit install"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
